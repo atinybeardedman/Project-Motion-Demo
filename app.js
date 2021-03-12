@@ -36,7 +36,7 @@ const a = 50;
 let isDown = false;
 
 // track the time elapsed
-let start;
+let animationStart;
 
 // helpers for the trail
 let showTrail = false;
@@ -108,16 +108,16 @@ function drawVector(start, end){
 // animation loop
 
 function runAnimation(timestamp){
-    if(!start){
-        start = timestamp;
+    if(!animationStart){
+        animationStart = timestamp;
     }
 
-    const dt = (timestamp - start) / 1000;
+    const dt = (timestamp - animationStart) / 1000;
 
     ball.x = release.x + ball.vx * dt;
     ball.y = release.y + ball.vy * dt + 0.5 * a * dt * dt;
 
-    ball.vy = release.vy + a * dt; // no need to vx unless adding drag
+    ball.vy = release.vy + a * dt; // no need for vx unless adding drag
     
     points.push({x: ball.x, y: ball.y});
 
@@ -128,6 +128,7 @@ function runAnimation(timestamp){
     }
 
     if(ball.x + ball.radius > 500 || ball.y + ball.radius > 500){
+        // I didn't address the edge case here regarding if you pull it off screen to begin with
         isMoving = false;
         return
     }
@@ -150,7 +151,7 @@ function toggleTrail(event){
 function reset(){
     ball = {...ball, ...startPosition};
     drawBall();
-    start = null;
+    animationStart = null;
     points = [];
 }
 
